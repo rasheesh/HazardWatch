@@ -1613,6 +1613,303 @@
       display: none !important;
     }
 
+    /* ============ live feed ============ */
+    .drop {
+      border: 1.5px dashed var(--line-2);
+      border-radius: var(--r-in);
+      background: #FFFFFF;
+      padding: 22px 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+
+    .drop:hover {
+      border-color: rgba(255, 77, 28, .5);
+      background: #FFF8F2;
+    }
+
+    .drop.over {
+      border-color: var(--ember);
+      background: #FFF1E8;
+    }
+
+    .drop .di {
+      width: 34px;
+      height: 34px;
+      margin: 0 auto 10px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--ember-2), var(--ember));
+      box-shadow: 0 8px 18px -8px rgba(255, 77, 28, .6);
+    }
+
+    .drop .dt {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .drop .ds {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--mut);
+      margin-top: 5px;
+    }
+
+    .loaded {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 11px;
+      padding: 10px 13px;
+      background: rgba(47, 122, 82, .07);
+      border: 1px solid rgba(47, 122, 82, .28);
+      border-radius: 12px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--sage);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fdivide {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--ghost);
+    }
+
+    .fdivide::before,
+    .fdivide::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--line);
+    }
+
+    .fctl {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 11px;
+    }
+
+    .fctl .fk {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--mut);
+    }
+
+    .seg {
+      display: flex;
+      gap: 3px;
+      background: #F1EDE4;
+      border-radius: 999px;
+      padding: 3px;
+    }
+
+    .segbtn {
+      border: none;
+      background: transparent;
+      color: var(--mut);
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      padding: 7px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+      transition: color .15s, background .15s;
+    }
+
+    .segbtn:hover {
+      color: var(--ink);
+    }
+
+    .segbtn.on {
+      background: var(--ink);
+      color: var(--shell);
+      box-shadow: 0 4px 12px -5px rgba(27, 23, 19, .5);
+    }
+
+    /* live stream card (ink) */
+    .feedmini {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .fstat {
+      background: var(--ink-4);
+      border: 1px solid rgba(255, 255, 255, .05);
+      border-radius: 13px;
+      padding: 12px 13px;
+    }
+
+    .fstat .fv {
+      font-size: 27px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      color: var(--d-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fstat.hz .fv {
+      color: var(--ember-2);
+    }
+
+    .fstat .fl {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--d-ghost);
+      margin-top: 7px;
+    }
+
+    .progress {
+      height: 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .07);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress .bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--ember), var(--ember-2));
+      transition: width .3s ease;
+    }
+
+    .ticker {
+      overflow-y: auto;
+      flex: 1;
+      min-height: 200px;
+      max-height: 470px;
+      padding-right: 4px;
+      margin-right: -6px;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      scrollbar-width: thin;
+    }
+
+    .ticker::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .ticker::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .tick {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 13px;
+      margin-bottom: 7px;
+      border-radius: 12px;
+      background: var(--ink-4);
+      border: 1px solid rgba(255, 255, 255, .05);
+      border-left: 3px solid rgba(255, 255, 255, .12);
+      animation: tickin .3s ease;
+    }
+
+    @keyframes tickin {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+    }
+
+    .tick.hz {
+      border-left-color: var(--ember);
+      background: linear-gradient(90deg, rgba(255, 77, 28, .1), var(--ink-4) 55%);
+    }
+
+    .tick.dup {
+      border-left-color: var(--amber);
+    }
+
+    .tick .pb {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      min-width: 44px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .06);
+      color: var(--d-mut);
+      font-variant-numeric: tabular-nums;
+      flex: none;
+    }
+
+    .tick.hz .pb {
+      background: var(--ember-deep);
+      color: #fff;
+    }
+
+    .tick .tx {
+      flex: 1;
+      min-width: 0;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: rgba(243, 239, 233, .82);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tick .tm {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--d-ghost);
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tick .tag {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 8px;
+    }
+
+    .tick.hz .tag {
+      background: rgba(255, 77, 28, .18);
+      color: #FFB49B;
+    }
+
+    .tick.dup .tag {
+      background: rgba(245, 166, 35, .16);
+      color: var(--amber);
+    }
+
     /* ============ responsive ============ */
     @media (max-width: 1040px) {
 
@@ -1693,6 +1990,8 @@
 
       <div class="tabs" role="tablist">
         <button class="tab active" id="tab-analyze" onclick="showTab('analyze')">Analyze</button>
+        <button class="tab" id="tab-livefeed" onclick="showTab('livefeed')">Live feed <span class="n"
+            id="feedcount">0</span></button>
         <button class="tab" id="tab-dashboard" onclick="showTab('dashboard')">Product monitor <span class="n"
             id="prodcount">–</span></button>
       </div>
@@ -1894,6 +2193,92 @@
         </article>
       </div>
     </main>
+
+    <!-- ================= LIVE FEED ================= -->
+    <main id="view-livefeed" hidden>
+      <div class="grid">
+
+        <article class="card span5">
+          <div class="chead">
+            <span class="mlabel">Feed source</span>
+            <span class="mchip">CSV · JSON · JSONL</span>
+          </div>
+          <div class="drop" id="drop" role="button" tabindex="0" aria-label="Upload a reviews file">
+            <div class="di">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+            </div>
+            <div class="dt">Drop a reviews file or click to browse</div>
+            <div class="ds">parses in your browser · needs a text column</div>
+          </div>
+          <input type="file" id="fileInput" accept=".csv,.tsv,.json,.jsonl,.ndjson,.txt" hidden>
+          <div class="loaded" id="loaded" hidden><span class="led on"></span><span id="loadedMsg"></span></div>
+          <div class="samples" style="margin-top:12px">
+            <span class="chip" role="button" tabindex="0" onclick="loadSample()">↧ Load sample feed · 1,000 reviews</span>
+          </div>
+
+          <div class="fdivide">Feed settings</div>
+          <div class="fctl">
+            <span class="fk">Reviews</span>
+            <div class="seg" id="segCount">
+              <button class="segbtn on" data-n="100">100</button>
+              <button class="segbtn" data-n="500">500</button>
+              <button class="segbtn" data-n="0">All</button>
+            </div>
+          </div>
+          <div class="fctl">
+            <span class="fk">Cadence</span>
+            <div class="seg" id="segMode">
+              <button class="segbtn on" data-m="stream">Stream</button>
+              <button class="segbtn" data-m="turbo">Turbo</button>
+            </div>
+          </div>
+          <div class="row">
+            <button class="btn btn-ember" id="feedStart" onclick="startFeed()" disabled><span class="spin"></span>Start
+              live feed</button>
+            <button class="btn btn-dim" id="feedStop" onclick="stopFeed()" disabled>Stop</button>
+          </div>
+          <div class="error" id="feederr"></div>
+        </article>
+
+        <article class="card ink span7">
+          <div class="chead">
+            <span class="mlabel">Live stream</span>
+            <span class="mchip" id="feedRate">Idle</span>
+          </div>
+          <div class="feedmini">
+            <div class="fstat">
+              <div class="fv" id="fProcessed">0</div>
+              <div class="fl">Processed</div>
+            </div>
+            <div class="fstat hz">
+              <div class="fv" id="fHazards">0</div>
+              <div class="fl">Hazards</div>
+            </div>
+            <div class="fstat">
+              <div class="fv" id="fDupes">0</div>
+              <div class="fl">Duplicates</div>
+            </div>
+            <div class="fstat">
+              <div class="fv" id="fIndex">–</div>
+              <div class="fl">Index size</div>
+            </div>
+          </div>
+          <div class="progress"><div class="bar" id="feedBar"></div></div>
+          <div class="ticker" id="ticker">
+            <div class="emptybox">
+              <img src="/static/img/ember-shard.webp" alt="">
+              <p>Load a feed and press start<br>reviews stream in live · hazards flag in ember</p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </main>
   </div>
 
   <footer>
@@ -1910,7 +2295,7 @@
     const session = { scans: 0, hazards: 0, ingested: 0 };
 
     function fill(t) { $("reviewText").value = t; $("reviewText").focus(); }
-    function cleanText(t) { return String(t ?? "").replace(/<br\s*\/?>/gi, " "); }
+    function cleanText(t) { return String(t ?? "").replace(/<br\s*\/?>/gi, " ").replace(/\s+/g, " ").trim(); }
     function fmtDate(ms) { return ms ? new Date(ms).toISOString().slice(0, 10) : "–"; }
     function fmtInt(n) { return Number(n).toLocaleString("en-US"); }
     function esc(s) { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; }
@@ -1931,7 +2316,7 @@
     }
 
     function showTab(name) {
-      for (const t of ["analyze", "dashboard"]) {
+      for (const t of ["analyze", "livefeed", "dashboard"]) {
         $("tab-" + t).classList.toggle("active", t === name);
         $("view-" + t).hidden = t !== name;
       }
@@ -2110,6 +2495,214 @@
         checkHealth();
       } catch (e) { showError("Save failed: " + e.message); }
     }
+
+    /* ---------- live feed ---------- */
+    const feed = { queue: [], count: 100, mode: "stream", running: false, stop: false };
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const TEXT_KEYS = ["text", "review", "review_text", "reviewtext", "body", "content", "comment"];
+    const ASIN_KEYS = ["parent_asin", "asin", "product_id", "productid", "product"];
+    const RATING_KEYS = ["rating", "stars", "score", "overall"];
+
+    function showFeedErr(m) { const e = $("feederr"); e.textContent = m; e.style.display = "block"; }
+    function clearFeedErr() { $("feederr").style.display = "none"; }
+
+    /* minimal RFC-4180 CSV parser (quotes, escaped quotes, embedded commas/newlines) */
+    function parseCSV(text) {
+      const rows = []; let row = [], field = "", q = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (q) {
+          if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else q = false; }
+          else field += c;
+        } else if (c === '"') q = true;
+        else if (c === ',' || c === '\t') { row.push(field); field = ""; }
+        else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ""; }
+        else if (c !== '\r') field += c;
+      }
+      if (field.length || row.length) { row.push(field); rows.push(row); }
+      return rows;
+    }
+
+    function findKey(obj, keys) {
+      const map = {};
+      for (const k of Object.keys(obj)) map[k.toLowerCase().trim()] = k;
+      for (const want of keys) if (map[want] != null) return map[want];
+      return null;
+    }
+
+    function normalizeRecords(arr) {
+      if (!Array.isArray(arr) || !arr.length) throw new Error("no rows found");
+      const tKey = findKey(arr[0], TEXT_KEYS);
+      if (!tKey) throw new Error("no text column (looked for text / review / body / content)");
+      const aKey = findKey(arr[0], ASIN_KEYS), rKey = findKey(arr[0], RATING_KEYS);
+      const out = [];
+      for (const o of arr) {
+        const text = cleanText(String(o[tKey] ?? "")).trim();
+        if (text.length < 2) continue;
+        out.push({
+          text: text.slice(0, 10000),
+          parent_asin: aKey && o[aKey] != null && o[aKey] !== "" ? String(o[aKey]) : null,
+          rating: rKey && o[rKey] != null && o[rKey] !== "" && !isNaN(+o[rKey]) ? +o[rKey] : null,
+        });
+      }
+      if (!out.length) throw new Error("no usable review text after parsing");
+      return out;
+    }
+
+    async function parseFile(file) {
+      const text = await file.text();
+      const name = file.name.toLowerCase();
+      if (name.endsWith(".csv") || name.endsWith(".tsv")) {
+        const rows = parseCSV(text);
+        const header = rows.shift().map(h => h.trim());
+        const arr = rows.filter(r => r.some(c => c !== "")).map(r => {
+          const o = {}; header.forEach((h, i) => o[h] = r[i]); return o;
+        });
+        return normalizeRecords(arr);
+      }
+      if (name.endsWith(".txt")) {
+        return normalizeRecords(text.split(/\r?\n/).filter(l => l.trim()).map(l => ({ text: l })));
+      }
+      // .json (array or {reviews|data|items}) or .jsonl / .ndjson
+      const trimmed = text.trim();
+      let arr;
+      try {
+        const j = JSON.parse(trimmed);
+        arr = Array.isArray(j) ? j : (j.reviews || j.data || j.items || [j]);
+      } catch {
+        arr = trimmed.split(/\r?\n/).filter(l => l.trim()).map(l => JSON.parse(l));
+      }
+      return normalizeRecords(arr);
+    }
+
+    function setQueue(records, label) {
+      feed.queue = records;
+      $("feedcount").textContent = fmtInt(records.length);
+      $("loaded").hidden = false;
+      $("loadedMsg").textContent = `${label} · ${fmtInt(records.length)} reviews ready`;
+      $("feedStart").disabled = false;
+    }
+
+    async function handleFile(file) {
+      clearFeedErr();
+      try {
+        const recs = await parseFile(file);
+        setQueue(recs, file.name);
+        toast(`Parsed ${fmtInt(recs.length)} reviews from ${file.name}`);
+      } catch (e) { showFeedErr("Could not parse file: " + e.message); }
+    }
+
+    async function loadSample() {
+      clearFeedErr();
+      try {
+        const res = await fetch("/static/sample_feed.json");
+        if (!res.ok) throw new Error("sample_feed.json not found — run scripts/make_sample_feed.py");
+        setQueue(normalizeRecords(await res.json()), "Sample feed");
+        toast(`Loaded sample feed · ${fmtInt(feed.queue.length)} reviews`);
+      } catch (e) { showFeedErr("Could not load sample: " + e.message); }
+    }
+
+    function addTick(item, res) {
+      const t = $("ticker");
+      const first = t.firstElementChild;
+      if (first && first.classList.contains("emptybox")) t.innerHTML = "";
+      const prob = res.hazard_prob != null ? res.hazard_prob : 0;
+      const cls = res.flagged ? "hz" : res.duplicate ? "dup" : "";
+      const tag = res.flagged ? '<span class="tag">Hazard</span>'
+        : res.duplicate ? '<span class="tag">Dup</span>' : "";
+      const div = document.createElement("div");
+      div.className = "tick " + cls;
+      div.innerHTML =
+        `<span class="pb">${(prob * 100).toFixed(0)}%</span>` +
+        `<span class="tx">${esc(cleanText(item.text))}</span>` +
+        `<span class="tm">${item.parent_asin ? esc(item.parent_asin) : ""}` +
+        `${item.rating != null ? " · ★" + item.rating : ""}${tag}</span>`;
+      t.insertBefore(div, t.firstChild);
+      while (t.children.length > 120) t.removeChild(t.lastChild);
+    }
+
+    async function startFeed() {
+      if (feed.running) return;
+      if (!feed.queue.length) return showFeedErr("Load a file or the sample feed first.");
+      clearFeedErr();
+      const n = feed.count === 0 ? feed.queue.length : Math.min(feed.count, feed.queue.length);
+      const batch = feed.queue.slice(0, n);
+      $("ticker").innerHTML = "";
+      $("fProcessed").textContent = "0"; $("fHazards").textContent = "0"; $("fDupes").textContent = "0";
+      $("feedBar").style.width = "0%"; $("feedRate").textContent = "Streaming…";
+      feed.running = true; feed.stop = false;
+      const start = $("feedStart"); start.disabled = true; start.classList.add("busy");
+      $("feedStop").disabled = false;
+
+      const t0 = performance.now();
+      let processed = 0, hazards = 0, dupes = 0, lastIndex = null;
+      const onResult = (item, res) => {
+        processed++;
+        if (res.flagged) hazards++; else if (res.duplicate) dupes++;
+        if (res.index_size != null) lastIndex = res.index_size;
+        $("fProcessed").textContent = fmtInt(processed);
+        $("fHazards").textContent = fmtInt(hazards);
+        $("fDupes").textContent = fmtInt(dupes);
+        if (lastIndex != null) $("fIndex").textContent = fmtInt(lastIndex);
+        $("feedBar").style.width = (processed / n * 100).toFixed(1) + "%";
+        const rate = processed / ((performance.now() - t0) / 1000);
+        $("feedRate").textContent = `${rate.toFixed(1)} rev/s · ${processed}/${n}`;
+        addTick(item, res);
+      };
+
+      try {
+        if (feed.mode === "turbo") {
+          const CH = 50;
+          for (let s = 0; s < batch.length && !feed.stop; s += CH) {
+            const chunk = batch.slice(s, s + CH);
+            const r = await api("/ingest-batch", { items: chunk.map(x => ({ text: x.text, parent_asin: x.parent_asin })) });
+            for (let i = 0; i < chunk.length && !feed.stop; i++) { onResult(chunk[i], r.results[i]); await sleep(10); }
+          }
+        } else {
+          for (const item of batch) {
+            if (feed.stop) break;
+            onResult(item, await api("/ingest", { text: item.text, parent_asin: item.parent_asin }));
+          }
+        }
+      } catch (e) { showFeedErr("Feed error: " + e.message); }
+
+      if (lastIndex != null) { tween($("idxsize"), lastIndex); }
+      if (hazards) { session.ingested += hazards; renderSession(); }
+      const secs = ((performance.now() - t0) / 1000).toFixed(0);
+      $("feedRate").textContent = feed.stop ? `Stopped · ${processed}/${n}` : `Done · ${processed} in ${secs}s`;
+      toast(feed.stop
+        ? `Feed stopped — ${hazards} hazards from ${processed} reviews.`
+        : `Feed complete — ${hazards} hazards flagged from ${fmtInt(processed)} reviews in ${secs}s.`);
+      checkHealth();
+      feed.running = false;
+      start.disabled = false; start.classList.remove("busy");
+      $("feedStop").disabled = true;
+    }
+
+    function stopFeed() { if (feed.running) { feed.stop = true; $("feedStop").disabled = true; } }
+
+    (function initFeed() {
+      const drop = $("drop"), input = $("fileInput");
+      if (!drop) return;
+      drop.addEventListener("click", () => input.click());
+      drop.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); }
+      });
+      ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+      ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+      drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
+      input.addEventListener("change", e => { const f = e.target.files[0]; if (f) handleFile(f); input.value = ""; });
+      $("segCount").addEventListener("click", e => {
+        const b = e.target.closest(".segbtn"); if (!b) return;
+        [...$("segCount").children].forEach(x => x.classList.toggle("on", x === b));
+        feed.count = +b.dataset.n;
+      });
+      $("segMode").addEventListener("click", e => {
+        const b = e.target.closest(".segbtn"); if (!b) return;
+        [...$("segMode").children].forEach(x => x.classList.toggle("on", x === b));
+        feed.mode = b.dataset.m;
+      });
+    })();
 
     /* ---------- monitor ---------- */
     const PROD_PAGE_SIZE = 10;

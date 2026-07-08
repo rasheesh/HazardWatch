@@ -20,10 +20,14 @@ Capstone/
 │   ├── hazard.index                 # frozen stage-1 original (BERT [CLS], unused)
 │   ├── flagged_embeddings.npy       # frozen stage-1 original (unused)
 │   └── backups/                     # original/ snapshot + timestamped saves
-├── static/index.html    # prototype UI (served at /) — Analyze + Product dashboard tabs
+├── static/
+│   ├── index.html                  # prototype UI (served at /) — Analyze · Live feed · Product monitor
+│   └── sample_feed.json            # bundled ~1,000-review demo feed for the Live feed tab
 ├── scripts/
 │   ├── sanity_check.py              # pre-deploy checks
-│   └── build_retrieval_index.py     # (re)build the MiniLM retrieval store
+│   ├── build_retrieval_index.py     # (re)build the MiniLM retrieval store
+│   ├── make_sample_feed.py          # (re)build static/sample_feed.json from a review parquet
+│   └── simulate_live_reviews.py     # CLI: stream a review file at the API like a live storefront feed
 ├── run_server.bat       # one-click server start (logs to server.log)
 └── requirements.txt
 ```
@@ -94,6 +98,35 @@ The port opens immediately; the models load in the background (~15 s warm, ~2 mi
 curl -s -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" `
      -d '{"text": "The charger caught fire and started smoking."}'
 ```
+
+## Simulating a live review feed (bulk ingestion)
+
+Two ways to push a whole file of reviews through the pipeline as if a storefront were
+streaming them in live — each review is classified, and genuine, non-duplicate hazards
+are added to the index in real time.
+
+**A. In the UI — the "Live feed" tab.** Drop a `.csv` / `.json` / `.jsonl` file (or click
+_Load sample feed_ for the bundled 1,000), pick a count and cadence (Stream = one review
+at a time, Turbo = batched), and press **Start**. Reviews stream into a live ticker with
+hazards flagging in ember and running counters for processed / hazards / duplicates /
+index size. The file is parsed in your browser; it needs a text column (`text`, `review`,
+`body`, …) and optionally `parent_asin` (aliases: `asin`, `product_id`).
+
+**B. From the CLI — `scripts/simulate_live_reviews.py`.** Feeds a parquet/csv/json/jsonl
+file at the running server. Nothing is persisted unless you pass `--save`.
+
+```powershell
+# stream 1,000 reviews at ~10/s (the "live" feel)
+.\.venv\Scripts\python.exe scripts\simulate_live_reviews.py --file "C:\path\reviews.parquet" --limit 1000
+
+# batched bulk sync, then persist
+.\.venv\Scripts\python.exe scripts\simulate_live_reviews.py --file "C:\path\reviews.csv" --mode batch --save
+```
+
+Throughput is classifier-bound (~2–3 reviews/s on CPU), so ~1,000 reviews take a few
+minutes. Rebuild the bundled sample from any review parquet with
+`scripts\make_sample_feed.py` (scores keyword candidates with the real classifier so the
+demo feed has a realistic hazard density).
 
 ## Architecture notes
 
