@@ -193,6 +193,22 @@ class HazardEngine:
                 "backup": str(backup_dir.relative_to(BASE_DIR)) if backup_dir else None,
             }
 
+    def reload(self) -> dict:
+        """Discard unsaved in-memory additions by re-reading the last-saved on-disk stores."""
+        with self.lock:
+            if not RETR_INDEX_PATH.exists():
+                raise FileNotFoundError(f"{RETR_INDEX_PATH} not found — nothing to reload")
+            self.index = faiss.read_index(str(RETR_INDEX_PATH))
+            self.flagged = pd.read_parquet(PARQUET_PATH)
+            self.embeds = np.load(RETR_EMB_PATH).astype("float32")
+            self._assert_aligned()
+            self.dirty = False
+            return {
+                "reverted": True,
+                "index_size": self.index.ntotal,
+                "unsaved_changes": self.dirty,
+            }
+
     def _backup_current(self) -> Path | None:
         """Copy the on-disk store trio into models/backups/<utc timestamp>/ (~5 MB each)."""
         files = [PARQUET_PATH, RETR_INDEX_PATH, RETR_EMB_PATH]

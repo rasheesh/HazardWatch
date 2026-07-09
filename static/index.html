@@ -1747,6 +1747,47 @@
       box-shadow: 0 4px 12px -5px rgba(27, 23, 19, .5);
     }
 
+    /* after-the-run index controls */
+    .idxstate {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 11px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--mut);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-warn {
+      background: #FFFFFF;
+      color: var(--ember-deep);
+      border-color: rgba(217, 44, 27, .3);
+      box-shadow: 0 1px 3px rgba(27, 23, 19, .08);
+    }
+
+    .btn-warn:hover {
+      background: #FFF3F1;
+      border-color: rgba(217, 44, 27, .55);
+    }
+
+    .btn-warn .spin {
+      border-color: rgba(217, 44, 27, .3);
+      border-top-color: var(--ember-deep);
+    }
+
+    .fhint {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      color: var(--ghost);
+      margin-top: 9px;
+      line-height: 1.55;
+    }
+
     /* live stream card (ink) */
     .feedmini {
       display: grid;
@@ -2081,7 +2122,6 @@
           </div>
           <div class="list" id="simlist">
             <div class="emptybox">
-              <img src="/static/img/ember-shard.webp" alt="">
               <p>Run an analysis to retrieve<br>the closest flagged hazards<br>MiniLM + FAISS · cosine</p>
             </div>
           </div>
@@ -2201,7 +2241,7 @@
         <article class="card span5">
           <div class="chead">
             <span class="mlabel">Feed source</span>
-            <span class="mchip">CSV · JSON · JSONL</span>
+            <span class="mchip">CSV · JSON · Parquet</span>
           </div>
           <div class="drop" id="drop" role="button" tabindex="0" aria-label="Upload a reviews file">
             <div class="di">
@@ -2213,9 +2253,9 @@
               </svg>
             </div>
             <div class="dt">Drop a reviews file or click to browse</div>
-            <div class="ds">parses in your browser · needs a text column</div>
+            <div class="ds">csv/json parse locally · parquet on the server · needs a text column</div>
           </div>
-          <input type="file" id="fileInput" accept=".csv,.tsv,.json,.jsonl,.ndjson,.txt" hidden>
+          <input type="file" id="fileInput" accept=".csv,.tsv,.json,.jsonl,.ndjson,.txt,.parquet,.pq" hidden>
           <div class="loaded" id="loaded" hidden><span class="led on"></span><span id="loadedMsg"></span></div>
           <div class="samples" style="margin-top:12px">
             <span class="chip" role="button" tabindex="0" onclick="loadSample()">↧ Load sample feed · 1,000 reviews</span>
@@ -2243,6 +2283,20 @@
             <button class="btn btn-dim" id="feedStop" onclick="stopFeed()" disabled>Stop</button>
           </div>
           <div class="error" id="feederr"></div>
+
+          <div class="fdivide">After the run</div>
+          <div class="idxstate">
+            <span class="led" id="feedDirtyDot"></span>
+            <span id="feedIdxMsg">Index · – vectors</span>
+          </div>
+          <div class="row">
+            <button class="btn btn-dim" id="feedSave" onclick="feedSaveIndex()" disabled><span class="spin"></span>Keep &amp;
+              save</button>
+            <button class="btn btn-warn" id="feedRevert" onclick="feedRevert()" disabled><span class="spin"></span>Revert
+              added</button>
+          </div>
+          <div class="fhint">Streamed hazards are auto-added to the index in memory. Keep &amp; save persists them to
+            disk · Revert rolls back to the last saved state.</div>
         </article>
 
         <article class="card ink span7">
@@ -2271,7 +2325,6 @@
           <div class="progress"><div class="bar" id="feedBar"></div></div>
           <div class="ticker" id="ticker">
             <div class="emptybox">
-              <img src="/static/img/ember-shard.webp" alt="">
               <p>Load a feed and press start<br>reviews stream in live · hazards flag in ember</p>
             </div>
           </div>
@@ -2398,6 +2451,7 @@
         $("dirtyDot").style.display = h.unsaved_changes ? "inline-block" : "none";
         $("idxcheck").textContent = `${fmtInt(h.index_size)} vectors · ${h.unsaved_changes ? "unsaved" : "saved"}`;
         $("idxled").className = "led " + (h.unsaved_changes ? "load" : "on");
+        updateFeedIndexState(h.index_size, h.unsaved_changes);
       } catch {
         setStatus("err", "Offline");
         setTimeout(checkHealth, 5000);
@@ -2457,7 +2511,7 @@
         $("simcount").textContent = `${r.similar.length} matches`;
         $("simlist").innerHTML = r.similar.length
           ? r.similar.map(s => simItem(s)).join("")
-          : `<div class="emptybox"><img src="/static/img/ember-shard.webp" alt=""><p>No similar flagged<br>incidents found</p></div>`;
+          : `<div class="emptybox"><p>No similar flagged<br>incidents found</p></div>`;
       } catch (e) {
         setScanning(false);
         clearProb();
@@ -2494,6 +2548,38 @@
         toast(`Saved ${fmtInt(r.index_size)} rows. Previous version backed up to ${r.backup ?? "n/a"}.`);
         checkHealth();
       } catch (e) { showError("Save failed: " + e.message); }
+    }
+
+    /* ---------- live feed: keep / revert index ---------- */
+    function updateFeedIndexState(size, unsaved) {
+      const msg = $("feedIdxMsg"); if (!msg) return;
+      msg.textContent = `Index · ${fmtInt(size)} vectors · ${unsaved ? "unsaved" : "saved"}`;
+      $("feedDirtyDot").className = "led " + (unsaved ? "load" : "on");
+      $("feedSave").disabled = !unsaved;
+      $("feedRevert").disabled = !unsaved;
+    }
+
+    async function feedSaveIndex() {
+      const btn = $("feedSave"); btn.disabled = true; btn.classList.add("busy");
+      try {
+        const r = await api("/save", {});
+        toast(`Kept & saved ${fmtInt(r.index_size)} rows. Backup: ${r.backup ?? "n/a"}.`);
+        await checkHealth();
+      } catch (e) { showFeedErr("Save failed: " + e.message); btn.disabled = false; }
+      btn.classList.remove("busy");
+    }
+
+    async function feedRevert() {
+      if (!confirm("Discard every hazard added since the last save and roll the index back to its last saved state?")) return;
+      const btn = $("feedRevert"); btn.disabled = true; btn.classList.add("busy");
+      try {
+        const r = await api("/revert", {});
+        tween($("idxsize"), r.index_size);
+        if ($("fIndex")) $("fIndex").textContent = fmtInt(r.index_size);
+        toast(`Reverted to last saved — ${fmtInt(r.index_size)} vectors in the index.`);
+        await checkHealth();
+      } catch (e) { showFeedErr("Revert failed: " + e.message); btn.disabled = false; }
+      btn.classList.remove("busy");
     }
 
     /* ---------- live feed ---------- */
@@ -2550,8 +2636,19 @@
     }
 
     async function parseFile(file) {
-      const text = await file.text();
       const name = file.name.toLowerCase();
+      if (name.endsWith(".parquet") || name.endsWith(".pq")) {
+        const res = await fetch("/parse-parquet", { method: "POST", headers: { "X-API-Key": API_KEY }, body: file });
+        if (!res.ok) {
+          let detail = "server could not read the parquet file";
+          try { detail = (await res.json()).detail || detail; } catch { }
+          throw new Error(detail);
+        }
+        const j = await res.json();
+        if (j.truncated) toast(`Large file — using the first ${fmtInt(j.rows)} rows.`, true);
+        return normalizeRecords(j.records);
+      }
+      const text = await file.text();
       if (name.endsWith(".csv") || name.endsWith(".tsv")) {
         const rows = parseCSV(text);
         const header = rows.shift().map(h => h.trim());

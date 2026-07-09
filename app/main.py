@@ -12,7 +12,7 @@ import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -169,6 +169,45 @@ def save():
         return get_engine().save()
     except AssertionError as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/revert", dependencies=[Depends(require_api_key)])
+def revert():
+    """Discard unsaved in-memory additions, reloading the last-saved stores from models/."""
+    try:
+        return get_engine().reload()
+    except (FileNotFoundError, AssertionError) as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/parse-parquet")
+async def parse_parquet(request: Request):
+    """Read an uploaded .parquet file (posted as the raw request body) into JSON records.
+
+    Parquet is binary, so the browser can't parse it the way it does CSV/JSON. The Live
+    Feed posts the file here and pandas (pyarrow) turns it into the same record shape the
+    client-side normaliser already expects — column detection stays in the frontend.
+    """
+    import io
+    import json
+
+    import pandas as pd
+
+    raw = await request.body()
+    if not raw:
+        raise HTTPException(status_code=400, detail="empty request body — no file received")
+    try:
+        df = pd.read_parquet(io.BytesIO(raw))
+    except Exception as e:  # malformed / non-parquet upload
+        raise HTTPException(status_code=400, detail=f"could not read parquet: {type(e).__name__}: {e}")
+
+    MAX_ROWS = 50_000
+    truncated = len(df) > MAX_ROWS
+    if truncated:
+        df = df.head(MAX_ROWS)
+    # to_json handles NaN -> null and numpy dtypes cleanly; parse back to a Python list
+    records = json.loads(df.to_json(orient="records"))
+    return {"records": records, "rows": len(records), "truncated": truncated}
 
 
 @app.get("/", include_in_schema=False)
