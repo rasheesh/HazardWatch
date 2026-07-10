@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
   <title>HazardWatch — Review Hazard Intelligence</title>
-  <link rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23FF4D1C'/%3E%3Cpath d='M17.5 5L9 18h6l-1.5 9L22 14h-6l1.5-9z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="/static/img/logo-mark.png">
 
   <style>
     :root {
@@ -157,15 +156,17 @@
       height: 40px;
       border-radius: 13px;
       flex: none;
-      background: linear-gradient(135deg, var(--ember-2), var(--ember));
+      background: #FFFFFF;
+      border: 1px solid var(--line);
       display: grid;
       place-items: center;
-      box-shadow: 0 8px 20px -6px rgba(255, 77, 28, .55), inset 0 1px 0 rgba(255, 255, 255, .35);
+      box-shadow: 0 8px 20px -6px rgba(255, 77, 28, .3);
     }
 
-    .brand .mark svg {
-      width: 18px;
-      height: 18px;
+    .brand .mark img {
+      width: 34px;
+      height: 34px;
+      display: block;
     }
 
     .brand .name {
@@ -882,8 +883,8 @@
     }
 
     .vposter {
-      flex: 1;
-      min-height: 150px;
+      flex: none;
+      aspect-ratio: 1 / 1;
       margin-top: 14px;
       border-radius: 16px;
       overflow: hidden;
@@ -1042,174 +1043,19 @@
       line-height: 2;
     }
 
-    /* ============ iPhone 14 Pro Max (review console) ============ */
-    .phonecell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .iphone {
-      width: 100%;
-      max-width: 312px;
-      aspect-ratio: 430 / 932;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: #0B0908;
-      border-radius: 54px;
-      padding: 12px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 -1px 0 rgba(0, 0, 0, .65),
-        0 34px 60px -26px rgba(27, 23, 19, .5), 0 10px 22px -10px rgba(27, 23, 19, .3);
-    }
-
-    .iphone::before {
-      /* volume keys, left edge */
-      content: "";
-      position: absolute;
-      left: -2.5px;
-      top: 138px;
-      width: 3px;
-      height: 66px;
-      border-radius: 2px;
-      background: #1C1713;
-    }
-
-    .iphone::after {
-      /* power key, right edge */
-      content: "";
-      position: absolute;
-      right: -2.5px;
-      top: 170px;
-      width: 3px;
-      height: 58px;
-      border-radius: 2px;
-      background: #1C1713;
-    }
-
-    .iphone .screen {
+    /* ============ review console card ============ */
+    .console textarea {
       flex: 1;
-      min-height: 0;
-      background: linear-gradient(178deg, #FDFCF9, #F2EEE6 70%);
-      border-radius: 43px;
-      padding: 12px 15px 8px;
-      color: var(--ink);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
     }
 
-    .screen .mchip {
-      background: #FFFFFF;
-      border: 1px solid var(--line-2);
-      color: var(--soft);
-    }
-
-    .padstatus {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: normal;
-      text-transform: uppercase;
-      color: var(--mut);
-      margin-bottom: 14px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .padstatus .clock {
-      min-width: 44px;
-      padding-left: 6px;
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    .padstatus .hzw {
-      min-width: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 6px;
-    }
-
-    .island {
-      width: 84px;
-      height: 23px;
-      border-radius: 14px;
-      background: #060404;
-      position: relative;
-      box-shadow: inset 0 0 4px rgba(255, 255, 255, .05);
-    }
-
-    .island::after {
-      /* camera glint inside the island */
-      content: "";
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      width: 7px;
-      height: 7px;
-      margin-top: -3.5px;
-      border-radius: 50%;
-      background: #10131C;
-      box-shadow: inset 0 0 2.5px rgba(120, 160, 255, .6);
-    }
-
-    .homebar {
-      width: 108px;
-      height: 4px;
-      border-radius: 4px;
-      background: rgba(27, 23, 19, .22);
-      margin: 13px auto 3px;
-      flex: none;
-    }
-
-    .screen .headline {
-      font-size: 18px;
-      margin: 0 0 12px;
-    }
-
-    .screen textarea {
-      min-height: 138px;
-      flex: 1;
-      font-size: 14px;
-      padding: 13px 14px;
-    }
-
-    .screen .row {
-      margin-top: 12px;
-      gap: 8px;
-    }
-
-    .screen .row+.row {
-      margin-top: 8px;
-    }
-
-    .screen .btn {
-      padding: 12px 16px;
-      font-size: 13.5px;
-    }
-
-    .screen .btn-ember {
+    .console .btn-ember {
       width: 100%;
       justify-content: center;
     }
 
-    .screen .btn-dim {
+    .console .btn-dim {
       flex: 1;
       justify-content: center;
-    }
-
-    .screen .samples {
-      margin-top: 12px;
-      gap: 6px;
-    }
-
-    .screen .chip {
-      font-size: 11.5px;
-      padding: 6.5px 12px;
     }
 
     .vfoot {
@@ -2019,9 +1865,7 @@
     <header class="hd">
       <div class="brand">
         <div class="mark">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M13 2L4.5 14h5L8 22l8.5-12h-5L13 2z" fill="#fff" />
-          </svg>
+          <img src="/static/img/logo-mark.png" alt="HazardWatch logo — orange security camera">
         </div>
         <div>
           <div class="name">Hazard<i>Watch</i></div>
@@ -2054,46 +1898,36 @@
     <main id="view-analyze">
       <div class="grid">
 
-        <div class="phonecell span4">
-          <div class="iphone">
-            <div class="screen console">
-              <div class="padstatus">
-                <span class="clock" id="padclock">--:--</span>
-                <span class="island"></span>
-                <span class="hzw"><span class="led" id="padled"></span>HZW-01</span>
-              </div>
-              <div class="chead" style="margin-bottom:10px">
-                <span class="mlabel">Review console</span>
-                <span class="mchip">BERT+BiGRU · S1</span>
-              </div>
-              <h2 class="headline">Paste a review. <i>Read the risk.</i></h2>
-              <textarea id="reviewText"
-                placeholder="e.g. “The charger caught fire and started smoking while plugged in overnight.”"></textarea>
-              <div class="row">
-                <button class="btn btn-ember" id="analyzeBtn" onclick="analyze()"><span class="spin"></span>Analyze
-                  review</button>
-              </div>
-              <div class="row">
-                <button class="btn btn-dim" id="ingestBtn" onclick="ingest()"><span class="spin"></span>Ingest</button>
-                <button class="btn btn-dim" onclick="saveIndex()">Save index</button>
-              </div>
-              <div class="samples">
-                <span class="chip" role="button" tabindex="0"
-                  onclick="fill('The battery exploded while charging and burned my desk.')">Battery exploded</span>
-                <span class="chip" role="button" tabindex="0"
-                  onclick="fill('This blender blade shattered and pieces flew everywhere, nearly hit my eye.')">Blade
-                  shattered</span>
-                <span class="chip" role="button" tabindex="0"
-                  onclick="fill('My toddler chewed off a small part and almost choked on it.')">Choking hazard</span>
-                <span class="chip" role="button" tabindex="0"
-                  onclick="fill('Great product, works well and arrived on time. Very happy with it!')">Benign
-                  review</span>
-              </div>
-              <div class="error" id="errbox"></div>
-              <div class="homebar"></div>
-            </div>
+        <article class="card span4 console">
+          <div class="chead">
+            <span class="mlabel">Review console</span>
+            <span class="mchip">BERT+BiGRU · S1</span>
           </div>
-        </div>
+          <h2 class="headline">Paste a review. <i>Read the risk.</i></h2>
+          <textarea id="reviewText"
+            placeholder="e.g. “The charger caught fire and started smoking while plugged in overnight.”"></textarea>
+          <div class="row">
+            <button class="btn btn-ember" id="analyzeBtn" onclick="analyze()"><span class="spin"></span>Analyze
+              review</button>
+          </div>
+          <div class="row">
+            <button class="btn btn-dim" id="ingestBtn" onclick="ingest()"><span class="spin"></span>Ingest</button>
+            <button class="btn btn-dim" onclick="saveIndex()">Save index</button>
+          </div>
+          <div class="samples">
+            <span class="chip" role="button" tabindex="0"
+              onclick="fill('The battery exploded while charging and burned my desk.')">Battery exploded</span>
+            <span class="chip" role="button" tabindex="0"
+              onclick="fill('This blender blade shattered and pieces flew everywhere, nearly hit my eye.')">Blade
+              shattered</span>
+            <span class="chip" role="button" tabindex="0"
+              onclick="fill('My toddler chewed off a small part and almost choked on it.')">Choking hazard</span>
+            <span class="chip" role="button" tabindex="0"
+              onclick="fill('Great product, works well and arrived on time. Very happy with it!')">Benign
+              review</span>
+          </div>
+          <div class="error" id="errbox"></div>
+        </article>
 
         <article class="card span4 verdict" id="verdictCard">
           <div class="chead">
@@ -2430,7 +2264,7 @@
     function setStatus(cls, label) {
       $("statusDot").className = "led " + cls;
       $("apistatus").textContent = label;
-      for (const id of ["pipeClf", "pipeRetr", "pipeStore", "padled"]) $(id).className = "led " + cls;
+      for (const id of ["pipeClf", "pipeRetr", "pipeStore"]) $(id).className = "led " + cls;
     }
 
     async function checkHealth() {
@@ -2926,19 +2760,12 @@
       } catch (e) { toast("Failed to load product: " + e.message, true); }
     }
 
-    /* ---------- device status clock ---------- */
-    function tickClock() {
-      const d = new Date();
-      $("padclock").textContent =
-        String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
-    }
     $("reviewText").addEventListener("keydown", e => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); analyze(); }
     });
 
     buildStrip();
     renderSession();
-    tickClock(); setInterval(tickClock, 30000);
     checkHealth();
   </script>
 </body>

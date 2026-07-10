@@ -1,4 +1,4 @@
-# HazardWatch — Capstone API + Prototype
+gi# HazardWatch — Capstone API + Prototype
 
 Product-review **hazard detection API**: a fine-tuned **BERT + BiGRU** classifier scores
 reviews for safety hazards (fire, choking, injury, …), a **MiniLM sentence-transformer +
