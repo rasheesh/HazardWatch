@@ -49,6 +49,21 @@ THRESHOLD = 0.3  # tuned for recall; do not change without re-evaluating
 ST_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 DUP_SIM_THRESHOLD = 0.99  # ingest rejects near-duplicates at/above this similarity
 
+# The 440 MB classifier checkpoint is too large for git, so it is hosted on a public
+# Hugging Face model repo and downloaded once on first run — a fresh clone then needs no
+# manual file setup. The small retrieval stores (parquet/index/embeddings) are committed
+# to git and stay row-aligned. Only a MISSING file is fetched (an existing one is reused).
+HF_MODEL_REPO = os.environ.get("HW_MODEL_REPO", "Menk51/bert_bigru_stage1.pt")
+
+
+def _ensure_artifact(filename: str, dest_path: Path) -> None:
+    """Download `filename` from the HF model repo into models/ if it isn't present."""
+    if dest_path.exists():
+        return
+    from huggingface_hub import hf_hub_download
+    MODELS_DIR.mkdir(parents=True, exist_ok=True)
+    hf_hub_download(repo_id=HF_MODEL_REPO, filename=filename, local_dir=str(MODELS_DIR))
+
 
 class BertBiGRU(nn.Module):
     """Architecture must match the checkpoint exactly (layer names and shapes)."""
@@ -71,6 +86,10 @@ class HazardEngine:
     def __init__(self):
         self.lock = threading.Lock()
         self.dirty = False  # True when in-memory stores have unsaved additions
+
+        # On first run (e.g. a fresh clone) the large classifier weights are not in git —
+        # fetch them from Hugging Face. The small retrieval stores are committed to git.
+        _ensure_artifact("bert_bigru_stage1.pt", MODEL_PATH)
 
         self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
         self.model = BertBiGRU().to(DEVICE)
