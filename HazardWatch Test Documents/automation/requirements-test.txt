@@ -1,0 +1,14 @@
+# HazardWatch test-automation dependencies (pinned to verified working versions).
+# Install into the same venv you run the server from:
+#     .venv\Scripts\python.exe -m pip install -r requirements-test.txt
+#
+# The app itself must already be installed (project-root requirements.txt).
+# Google Chrome must be installed; webdriver-manager downloads the matching
+# ChromeDriver automatically on first run (it is then cached under ~/.wdm).
+
+selenium==4.45.0
+webdriver-manager==4.1.2
+requests==2.34.2
+pandas==2.2.2
+pyarrow==16.1.0
+psutil==6.0.0     # optional: server memory/CPU capture in the volume test (TC-59); skipped if absent
