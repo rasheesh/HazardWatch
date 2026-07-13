@@ -3,21 +3,18 @@
 __pycache__/
 *.pyc
 
-# --- Large model weights (download separately — see README "Setup") ---
-# Trained classifier weights, ~421 MB, exceeds GitHub's 100 MB file limit.
+# --- Large model weights (auto-downloaded from Hugging Face on first run — see README) ---
+# Trained classifier weights, ~440 MB, exceeds GitHub's 100 MB file limit.
+# app/ml.py fetches this from the HF model repo (HW_MODEL_REPO) when it is missing.
 models/bert_bigru_stage1.pt
-
-# --- Regenerated locally by scripts/build_retrieval_index.py ---
-models/retrieval.index
-models/retrieval_embeddings.npy
 
 # --- Frozen stage-1 originals (unused) + rolling backups ---
 models/hazard.index
 models/flagged_embeddings.npy
 models/backups/
 
-# NOTE: models/flagged_reviews.parquet IS committed — it's the source dataset
-# and the retrieval store above is rebuilt from it.
+# NOTE: flagged_reviews.parquet, retrieval.index and retrieval_embeddings.npy ARE
+# committed together (small + must stay row-aligned). Only the 440 MB .pt is on HF.
 
 # --- Runtime / local tooling ---
 server.log

@@ -6,6 +6,7 @@ pandas==2.2.2
 pyarrow==16.1.0
 numpy==1.26.4
 sentence-transformers==3.0.1
+huggingface_hub==0.36.2   # auto-downloads the model artifacts from HF on first run
 fastapi==0.111.1
 uvicorn[standard]==0.30.3
 python-multipart==0.0.9
