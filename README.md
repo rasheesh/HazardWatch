@@ -1,4 +1,4 @@
-gi# HazardWatch — Capstone API + Prototype
+# HazardWatch — Capstone API + Prototype
 
 Product-review **hazard detection API**: a fine-tuned **BERT + BiGRU** classifier scores
 reviews for safety hazards (fire, choking, injury, …), a **MiniLM sentence-transformer +
@@ -13,10 +13,10 @@ Capstone/
 │   ├── ml.py            # BertBiGRU classifier + MiniLM retrieval + HazardEngine
 │   └── main.py          # FastAPI app (endpoints below)
 ├── models/
-│   ├── bert_bigru_stage1.pt         # stage-1 classifier weights (~421 MB — NOT in git, download separately)
-│   ├── flagged_reviews.parquet      # 1,343 flagged hazard reviews (live store)
-│   ├── retrieval.index              # FAISS index of MiniLM embeddings (live store)
-│   ├── retrieval_embeddings.npy     # (N, 384) float32, row-aligned (live store)
+│   ├── bert_bigru_stage1.pt         # classifier weights (~440 MB — NOT in git; auto-downloaded from Hugging Face)
+│   ├── flagged_reviews.parquet      # flagged hazard reviews (committed; row-aligned live store)
+│   ├── retrieval.index              # FAISS index of MiniLM embeddings (committed; row-aligned)
+│   ├── retrieval_embeddings.npy     # (N, 384) float32, row-aligned (committed)
 │   ├── hazard.index                 # frozen stage-1 original (BERT [CLS], unused)
 │   ├── flagged_embeddings.npy       # frozen stage-1 original (unused)
 │   └── backups/                     # original/ snapshot + timestamped saves
@@ -36,32 +36,36 @@ Capstone/
 
 Requires **Python 3.10–3.12** (torch 2.3.1 has no 3.13/3.14 wheel).
 
-**1. Clone and get the model weights.** The trained classifier weights
-`models/bert_bigru_stage1.pt` (~421 MB) are **not in git** (they exceed GitHub's
-100 MB file limit). Download the file and drop it into `models/`:
-
-> 📦 **Download `bert_bigru_stage1.pt`:** _&lt;paste the Google Drive / OneDrive link here&gt;_
+**1. Clone and install dependencies.** No manual model download is needed — the small
+retrieval stores are committed with the repo, and the large classifier weights are
+fetched automatically on first run (see step 2).
 
 ```powershell
 git clone <repo-url>
-cd Capstone
-# ...then place the downloaded bert_bigru_stage1.pt into the models\ folder
-```
-
-**2. Create the environment and install dependencies:**
-
-```powershell
+cd HazardWatch
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-**3. Build the retrieval index, then sanity-check** (first run downloads
-`bert-base-uncased` + `all-MiniLM-L6-v2` from Hugging Face, ~450 MB, cached after):
+**2. First run downloads the models automatically.** On the first server start the app
+downloads (once, then cached under `~/.cache/huggingface`):
+
+- `bert_bigru_stage1.pt` (~440 MB) — the classifier weights, from the Hugging Face model
+  repo **`Menk51/bert_bigru_stage1.pt`** (override with the `HW_MODEL_REPO` env var);
+- `bert-base-uncased` + `all-MiniLM-L6-v2` — the base models (~450 MB).
+
+So a fresh clone runs with **no manual file setup**. The first start needs internet and is
+slower while these download (~900 MB total); later starts are fast.
+
+**3. (Optional) sanity-check:**
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\build_retrieval_index.py   # rebuilds retrieval.index + embeddings from the parquet
-.\.venv\Scripts\python.exe scripts\sanity_check.py            # verifies everything is aligned and serving-ready
+.\.venv\Scripts\python.exe scripts\sanity_check.py   # verifies the stores are aligned and serving-ready
 ```
+
+> The committed `retrieval.index` / `retrieval_embeddings.npy` stay row-aligned with
+> `flagged_reviews.parquet`. Only rebuild them
+> (`scripts\build_retrieval_index.py`) if you change the parquet.
 
 ## Run the API
 
